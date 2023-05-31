@@ -2,6 +2,7 @@ require('dotenv').config()
 const express = require('express')
 const http = require('http')
 const socketio = require('socket.io')
+const bodyParser = require('body-parser')
 const { connection } = require('./src/socket/connection')
 
 // Mongo DB
@@ -12,8 +13,14 @@ const app = express()
 const server = http.createServer(app)
 const io = socketio(server)
 
+// Middlewares and configs
+app.use(bodyParser.json())
+
 // Socket io
 io.on('connection', socket => connection(socket, io))
+
+// Http Routes
+app.use('/api/user/', require('./src/routes/user'))
 
 const PORT = process.env.PORT || 3000
 server.listen(PORT, () => {

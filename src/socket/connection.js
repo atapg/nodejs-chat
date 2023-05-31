@@ -12,6 +12,8 @@ const connection = (socket, io) => {
 
 	// Send message to all users
 	// io.emit("msg", "")
+
+	// Sockets
 	socket.on('joinRoom', socket => joinRoom(socket, io))
 }
 
