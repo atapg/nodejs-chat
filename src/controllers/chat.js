@@ -35,8 +35,9 @@ const getChats = async (req, res) => {
 const getChatMessages = async (req, res) => {
 	try {
 		const maxShow = 10
+		const page = req.query.page
 
-		const startIndex = (Number(1) - 1) * Number(maxShow)
+		const startIndex = (Number(page) - 1) * Number(maxShow)
 
 		const messages = await Message.find({
 			chat: req.params.id,

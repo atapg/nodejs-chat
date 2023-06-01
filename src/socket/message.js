@@ -9,7 +9,9 @@ const sendMessage = async (socket, io, data) => {
 			chat: data.room,
 		})
 
-		io.to(data.room).emit('msg', data.msg)
+		await msg.populate({ path: 'from', select: 'username' })
+
+		io.to(data.room).emit('msg', msg)
 	} catch (e) {
 		console.log('error')
 	}
