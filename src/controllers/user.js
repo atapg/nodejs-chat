@@ -1,6 +1,5 @@
 const validator = require('validator')
 const User = require('../models/user')
-const Chat = require('../models/chat')
 const bcrypt = require('bcryptjs')
 const { generateToken } = require('../utils/token')
 
@@ -126,24 +125,4 @@ const getUserInfo = async (req, res) => {
 	}
 }
 
-const getChats = async (req, res) => {
-	try {
-		const chats = await User.findById(req.authenticatedUser._id).populate(
-			'chats',
-		)
-
-		return res.json({
-			data: {
-				chats: chats.chats,
-			},
-			status: 'success',
-		})
-	} catch (e) {
-		return res.status(400).json({
-			message: 'Something went wrong',
-			status: 'failed',
-		})
-	}
-}
-
-module.exports = { registerUser, loginUser, getUserInfo, getChats }
+module.exports = { registerUser, loginUser, getUserInfo }

@@ -1,9 +1,5 @@
-const {
-	registerUser,
-	loginUser,
-	getUserInfo,
-	getChats,
-} = require('../controllers/user')
+const { getChats } = require('../controllers/chat')
+const { registerUser, loginUser, getUserInfo } = require('../controllers/user')
 const authentication = require('../middlewares/authentication')
 
 const route = require('express').Router()
