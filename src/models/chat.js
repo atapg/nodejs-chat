@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const groupSchema = mongoose.Schema(
+const chatSchema = mongoose.Schema(
 	{
 		name: {
 			type: String,
@@ -12,11 +12,20 @@ const groupSchema = mongoose.Schema(
 		},
 		members: {
 			type: [mongoose.Schema.Types.ObjectId],
-			ref: 'group',
+			ref: 'user',
 		},
 		admins: {
 			type: [mongoose.Schema.Types.ObjectId],
 			ref: 'user',
+		},
+		type: {
+			type: String,
+			enum: ['private', 'group'],
+			default: 'private',
+		},
+		lastMessage: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'message',
 		},
 	},
 	{
@@ -24,4 +33,4 @@ const groupSchema = mongoose.Schema(
 	},
 )
 
-module.exports = mongoose.model('group', groupSchema)
+module.exports = mongoose.model('chat', chatSchema)

@@ -3,6 +3,7 @@ const express = require('express')
 const http = require('http')
 const socketio = require('socket.io')
 const bodyParser = require('body-parser')
+const cors = require('cors')
 const { connection } = require('./src/socket/connection')
 
 // Mongo DB
@@ -15,6 +16,7 @@ const io = socketio(server)
 
 // Middlewares and configs
 app.use(bodyParser.json())
+app.use(cors())
 
 // Socket io
 io.on('connection', socket => connection(socket, io))

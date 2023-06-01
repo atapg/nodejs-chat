@@ -11,11 +11,12 @@ const userSchema = mongoose.Schema(
 			type: String,
 			required: true,
 		},
-		groups: {
-			type: [mongoose.Schema.Types.ObjectId],
-			ref: 'group',
-			default: [],
-		},
+		chats: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'chat',
+			},
+		],
 	},
 	{
 		timestamps: true,
