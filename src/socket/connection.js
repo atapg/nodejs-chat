@@ -1,4 +1,5 @@
 const { joinRoom } = require('./room')
+const { sendMessage } = require('./message')
 
 const connection = (socket, io) => {
 	console.log('New connection')
@@ -13,7 +14,8 @@ const connection = (socket, io) => {
 	// io.emit("msg", "")
 
 	// Sockets
-	socket.on('joinRoom', data => joinRoom(socket, io,data))
+	socket.on('joinRoom', data => joinRoom(socket, io, data))
+	socket.on('msg', data => sendMessage(socket, io, data))
 }
 
 module.exports = { connection }

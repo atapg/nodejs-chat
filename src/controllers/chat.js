@@ -1,6 +1,6 @@
 const User = require('../models/user')
 const Chat = require('../models/chat')
-const chat = require('../models/chat')
+const Message = require('../models/message')
 
 const getChats = async (req, res) => {
 	try {
@@ -32,4 +32,31 @@ const getChats = async (req, res) => {
 	}
 }
 
-module.exports = { getChats }
+const getChatMessages = async (req, res) => {
+	try {
+		const maxShow = 10
+
+		const startIndex = (Number(1) - 1) * Number(maxShow)
+
+		const messages = await Message.find({
+			chat: req.params.id,
+		})
+			.sort({ _id: -1 }) // get the latest
+			.limit(Number(maxShow))
+			.skip(startIndex)
+			.populate({ path: 'from', select: 'username' })
+
+		res.json({
+			data: messages,
+			status: 'success',
+		})
+	} catch (e) {
+		console.log(e)
+		return res.status(400).json({
+			message: 'Something went wrong',
+			status: 'failed',
+		})
+	}
+}
+
+module.exports = { getChats, getChatMessages }

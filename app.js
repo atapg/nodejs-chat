@@ -12,10 +12,10 @@ require('./src/config/mongodb')
 // Server
 const app = express()
 const server = http.createServer(app)
-const io = socketio(server,{
+const io = socketio(server, {
 	cors: {
-		origin: "*",
-	}
+		origin: '*',
+	},
 })
 
 // Middlewares and configs
@@ -27,6 +27,7 @@ io.on('connection', socket => connection(socket, io))
 
 // Http Routes
 app.use('/api/user/', require('./src/routes/user'))
+app.use('/api/chat/', require('./src/routes/chat'))
 
 const PORT = process.env.PORT || 3000
 server.listen(PORT, () => {

@@ -10,10 +10,10 @@ const messageSchema = mongoose.Schema(
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'user',
 		},
-		to: {
-			type: mongoose.Schema.Types.ObjectId,
-			ref: 'user',
-		},
+		// to: {
+		// 	type: mongoose.Schema.Types.ObjectId,
+		// 	ref: 'user',
+		// },
 		chat: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'chat',
