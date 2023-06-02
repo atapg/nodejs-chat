@@ -1,6 +1,8 @@
 const User = require('../models/user')
 const Chat = require('../models/chat')
 const Message = require('../models/message')
+const { sendChats } = require('../socket/sockets')
+const { em } = require('../utils/event')
 
 const getChats = async (req, res) => {
 	try {
@@ -77,12 +79,16 @@ const createChat = async (req, res) => {
 				$push: { chats: chat._id },
 			})
 
+			em.emit('newChats', members)
+
 			members.forEach(async member => {
 				await User.findByIdAndUpdate(member, {
 					$push: { chats: chat._id },
 				})
 			})
 		}
+
+		// Send new chat notif to users
 
 		res.json({
 			data: chat,

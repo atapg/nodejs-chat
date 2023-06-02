@@ -5,6 +5,8 @@ const socketio = require('socket.io')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const { connection } = require('./src/socket/connection')
+const { users } = require('./src/socket/sockets')
+const { em } = require('./src/utils/event')
 
 // Mongo DB
 require('./src/config/mongodb')
@@ -24,6 +26,22 @@ app.use(cors())
 
 // Socket io
 io.on('connection', socket => connection(socket, io))
+
+em.on('newChats', data => {
+	const usersNeedToBeNotified = []
+
+	data.forEach(u => {
+		users.forEach(user => {
+			if (u === user._id) {
+				usersNeedToBeNotified.push(user)
+			}
+		})
+	})
+
+	usersNeedToBeNotified.forEach(async u => {
+		io.to(u.socketId).emit('chat', true)
+	})
+})
 
 // Http Routes
 app.use('/api/user/', require('./src/routes/user'))
