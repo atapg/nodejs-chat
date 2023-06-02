@@ -16,6 +16,7 @@ const connection = (socket, io) => {
 	// Sockets
 	socket.on('joinRoom', data => joinRoom(socket, io, data))
 	socket.on('msg', data => sendMessage(socket, io, data))
+	socket.on('disconnect', () => console.log('Connection closed'))
 }
 
 module.exports = { connection }

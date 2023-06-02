@@ -34,7 +34,7 @@ const getChats = async (req, res) => {
 
 const getChatMessages = async (req, res) => {
 	try {
-		const maxShow = 10
+		const maxShow = 20
 		const page = req.query.page
 
 		const startIndex = (Number(page) - 1) * Number(maxShow)
@@ -45,7 +45,7 @@ const getChatMessages = async (req, res) => {
 			.sort({ _id: -1 }) // get the latest
 			.limit(Number(maxShow))
 			.skip(startIndex)
-			.populate({ path: 'from', select: 'username' })
+			.populate({ path: 'from', select: 'username avatarColor' })
 
 		res.json({
 			data: messages,
@@ -60,4 +60,61 @@ const getChatMessages = async (req, res) => {
 	}
 }
 
-module.exports = { getChats, getChatMessages }
+const createChat = async (req, res) => {
+	try {
+		const { members, name } = req.body
+
+		const chat = await Chat.create({
+			name,
+			owner: req.authenticatedUser._id,
+			admins: [req.authenticatedUser._id],
+			type: members.length === 1 ? 'private' : 'group',
+			members: [req.authenticatedUser._id, ...members],
+		})
+
+		if (chat) {
+			await User.findByIdAndUpdate(req.authenticatedUser._id, {
+				$push: { chats: chat._id },
+			})
+
+			members.forEach(async member => {
+				await User.findByIdAndUpdate(member, {
+					$push: { chats: chat._id },
+				})
+			})
+		}
+
+		res.json({
+			data: chat,
+			status: 'success',
+		})
+	} catch (e) {
+		console.log(e)
+		return res.status(400).json({
+			message: 'Something went wrong',
+			status: 'failed',
+		})
+	}
+}
+
+const getMembers = async (req, res) => {
+	try {
+		let members = await User.find()
+
+		res.json({
+			data: members.filter(
+				member =>
+					member._id.toString() !== req.authenticatedUser._id.toString(),
+			),
+			status: 'success',
+		})
+	} catch (e) {
+		console.log(e)
+		return res.status(400).json({
+			message: 'Something went wrong',
+			status: 'failed',
+		})
+	}
+}
+
+module.exports = { getChats, getChatMessages, createChat, getMembers }

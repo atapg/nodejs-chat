@@ -11,6 +11,10 @@ const userSchema = mongoose.Schema(
 			type: String,
 			required: true,
 		},
+		avatarColor: {
+			type: String,
+			default: '#' + Math.floor(Math.random() * 16777215).toString(16),
+		},
 		chats: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
